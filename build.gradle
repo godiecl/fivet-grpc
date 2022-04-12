@@ -22,11 +22,16 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 
     // Lombok
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    // Logger
+    testImplementation 'org.slf4j:slf4j-api:1.7.36'
+    testImplementation 'ch.qos.logback:logback-classic:1.2.11'
+
+    // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
-
-    // JPA
-    implementation 'javax.persistence:javax.persistence-api:2.2'
 
     // ORMLite
     implementation 'com.j256.ormlite:ormlite-core:6.1'
