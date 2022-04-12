@@ -23,17 +23,8 @@
 
 package cl.ucn.disc.pdis.fivet;
 
-import cl.ucn.disc.pdis.fivet.model.DAO;
-import cl.ucn.disc.pdis.fivet.model.Persona;
-import cl.ucn.disc.pdis.fivet.orm.ORMLiteDAO;
-import com.j256.ormlite.field.DataPersisterManager;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.table.TableUtils;
-import lombok.Cleanup;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The Main.
@@ -52,46 +43,6 @@ public final class Main {
     public static void main(String[] args) {
 
         log.debug("Starting Main ..");
-
-        // Register ZonedDateTimeType
-        DataPersisterManager.registerDataPersisters(ORMLiteDAO.ZonedDateTimeType.INSTANCE);
-
-        // H2 database
-        // String databaseUrl = "jdbc:h2:mem:fivet";
-        String databaseUrl = "jdbc:sqlite:fivet.db";
-
-        // Build the Connection with auto close (clean up)
-        @Cleanup
-        JdbcConnectionSource cs = new JdbcConnectionSource(databaseUrl);
-
-        // Create the database
-        TableUtils.dropTable(cs, Persona.class, true);
-        TableUtils.createTable(cs, Persona.class);
-
-        // The dao
-        DAO<Persona> daoPersona = new ORMLiteDAO<>(cs, Persona.class);
-
-        // Create a Persona
-        {
-            Persona persona = Persona.builder()
-                    .rut("130144918")
-                    .nombre("Diego Urrutia Astorga")
-                    .email("durrutia@ucn.cl")
-                    .build();
-            daoPersona.save(persona);
-            log.debug("Persona to db: {}", ToStringBuilder.reflectionToString(persona, ToStringStyle.MULTI_LINE_STYLE));
-        }
-
-        // Find the Persona
-        {
-            Persona persona = daoPersona.get(1).orElseThrow();
-            log.debug("Persona from db: {}", ToStringBuilder.reflectionToString(persona, ToStringStyle.MULTI_LINE_STYLE));
-        }
-
-        // Delete the Persona
-        {
-            // daoPersona.delete(1);
-        }
 
         log.debug("Done.");
     }
