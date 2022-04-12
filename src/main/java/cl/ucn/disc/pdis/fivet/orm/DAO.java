@@ -21,7 +21,9 @@
  *
  */
 
-package cl.ucn.disc.pdis.fivet.model;
+package cl.ucn.disc.pdis.fivet.orm;
+
+import cl.ucn.disc.pdis.fivet.model.BaseEntity;
 
 import java.util.List;
 import java.util.Optional;
