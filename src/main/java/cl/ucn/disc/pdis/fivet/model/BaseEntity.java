@@ -25,6 +25,7 @@ package cl.ucn.disc.pdis.fivet.model;
 
 import com.j256.ormlite.field.DatabaseField;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
@@ -53,6 +54,7 @@ public abstract class BaseEntity {
      * The date of deletion
      */
     @Getter
+    @Setter
     @DatabaseField(canBeNull = true)
     protected ZonedDateTime deletedAt;
 
