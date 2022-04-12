@@ -64,8 +64,8 @@ public final class TestDAO {
         DataPersisterManager.registerDataPersisters(ZonedDateTimeType.INSTANCE);
 
         // H2 database
-        String databaseUrl = "jdbc:h2:mem:fivet";
-        // String databaseUrl = "jdbc:sqlite:fivet.db";
+        // String databaseUrl = "jdbc:h2:mem:fivet";
+        String databaseUrl = "jdbc:sqlite:fivet.db";
 
         log.debug("Building the Connection, using: {}", databaseUrl);
         // Build the Connection with auto close (clean up)
@@ -116,6 +116,9 @@ public final class TestDAO {
             Assertions.assertTrue(dao.get(1).isEmpty(), "DAO 1 was not null");
             Assertions.assertTrue(dao.get(0).isEmpty(), "DAO 1 was not null");
         }
+
+        // Drop the dabase
+        TableUtils.dropTable(cs, System.class, true);
 
         log.debug("Done.");
     }
