@@ -42,6 +42,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.time.ZonedDateTime;
 
 /**
  * Testing the DAO.
@@ -63,9 +64,11 @@ public final class TestDAO {
         log.debug("Registering the ZonedDateTimeType ..");
         DataPersisterManager.registerDataPersisters(ZonedDateTimeType.INSTANCE);
 
-        // H2 database
-        // String databaseUrl = "jdbc:h2:mem:fivet";
-        String databaseUrl = "jdbc:sqlite:fivet.db";
+        // The driver connection
+        String databaseUrl = "jdbc:h2:mem:fivet";
+        // String databaseUrl = "jdbc:postgresql:fivet";
+        // String databaseUrl = "jdbc:sqlite:fivet.db";
+        // String databaseUrl = "jdbc:mysql://localhost:3306/fivet";
 
         log.debug("Building the Connection, using: {}", databaseUrl);
         // Build the Connection with auto close (clean up)
@@ -74,33 +77,43 @@ public final class TestDAO {
 
         log.debug("Dropping the tables..");
         // Drop the dabase
-        TableUtils.dropTable(cs, System.class, true);
+        TableUtils.dropTable(cs, TheEntity.class, true);
 
         log.debug("Creating the tables ..");
         // Create the database
-        TableUtils.createTable(cs, System.class);
+        TableUtils.createTable(cs, TheEntity.class);
 
         log.debug("Building the ORMLiteDAO ..");
         // The dao
-        DAO<System> dao = new ORMLiteDAO<>(cs, System.class);
+        DAO<TheEntity> dao = new ORMLiteDAO<>(cs, TheEntity.class);
 
         // Create ..
         log.debug("Creating entities ..");
         {
-            System systemA = new System("System A");
-            dao.save(systemA);
-            log.debug("System to db: {}", ToStringBuilder.reflectionToString(systemA, ToStringStyle.MULTI_LINE_STYLE));
+            TheEntity theEntityA = TheEntity.builder()
+                    .theString("The String A")
+                    .theInteger(128)
+                    .theDouble(128.0)
+                    .theBoolean(Boolean.TRUE)
+                    .build();
+            dao.save(theEntityA);
+            log.debug("To db: {}", ToStringBuilder.reflectionToString(theEntityA, ToStringStyle.MULTI_LINE_STYLE));
 
-            System systemB = new System("System B");
-            dao.save(systemB);
-            log.debug("System to db: {}", ToStringBuilder.reflectionToString(systemB, ToStringStyle.MULTI_LINE_STYLE));
+            TheEntity theEntityB = TheEntity.builder()
+                    .theString("The String B")
+                    .theInteger(1024)
+                    .theDouble(1024.0)
+                    .theBoolean(Boolean.FALSE)
+                    .build();
+            dao.save(theEntityB);
+            log.debug("To db: {}", ToStringBuilder.reflectionToString(theEntityB, ToStringStyle.MULTI_LINE_STYLE));
         }
 
         // Retrieve ..
         log.debug("Retrieving ..");
         {
-            System system = dao.get(1).orElseThrow();
-            log.debug("System from db: {}", ToStringBuilder.reflectionToString(system, ToStringStyle.MULTI_LINE_STYLE));
+            TheEntity theEntity = dao.get(1).orElseThrow();
+            log.debug("from db: {}", ToStringBuilder.reflectionToString(theEntity, ToStringStyle.MULTI_LINE_STYLE));
         }
 
         // Fake delete ..
@@ -118,25 +131,54 @@ public final class TestDAO {
         }
 
         // Drop the dabase
-        TableUtils.dropTable(cs, System.class, true);
+        TableUtils.dropTable(cs, TheEntity.class, true);
 
         log.debug("Done.");
     }
 
     /**
-     * Inner class.
+     * Inner Entity Class.
      */
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    @DatabaseTable
-    private static class System extends BaseEntity {
+    @DatabaseTable(tableName = "the_entity")
+    private static class TheEntity extends BaseEntity {
 
         /**
          * The Name
          */
         @Getter
         @DatabaseField(canBeNull = false, unique = true)
-        private String name;
+        private String theString;
+
+        /**
+         * The ZonedDateTime
+         */
+        @Getter
+        @DatabaseField(canBeNull = false)
+        private final ZonedDateTime theDate = ZonedDateTime.now();
+
+        /**
+         * The Integer.
+         */
+        @Getter
+        @DatabaseField(canBeNull = false)
+        private Integer theInteger;
+
+        /**
+         * The Double.
+         */
+        @Getter
+        @DatabaseField(canBeNull = false)
+        private Double theDouble;
+
+        /**
+         * The Boolean.
+         */
+        @Getter
+        @DatabaseField(canBeNull = false)
+        private Boolean theBoolean;
 
     }
 
