@@ -1,0 +1,14 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+.name
+checkstyle-idea.xml
+compiler.xml
+gradle.xml
+jarRepositories.xml
+misc.xml
+/dictionaries/
