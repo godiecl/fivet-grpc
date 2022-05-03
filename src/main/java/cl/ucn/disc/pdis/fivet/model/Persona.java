@@ -63,6 +63,13 @@ public final class Persona extends BaseEntity {
     private String email;
 
     /**
+     * The password.
+     */
+    @Getter
+    @DatabaseField(canBeNull = false)
+    private String password;
+
+    /**
      * The Direccion.
      */
     @Getter
