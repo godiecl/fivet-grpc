@@ -41,10 +41,10 @@ public final class Main {
      */
     @SneakyThrows(Exception.class)
     public static void main(String[] args) {
-
         log.debug("Starting Main ..");
 
         log.debug("Done.");
     }
+
 
 }
