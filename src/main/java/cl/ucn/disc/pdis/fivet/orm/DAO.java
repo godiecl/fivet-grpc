@@ -40,8 +40,18 @@ public interface DAO<T extends BaseEntity> {
      * Get optional T.
      *
      * @param id to retrieve.
+     * @return the optional T
      */
     Optional<T> get(Integer id);
+
+    /**
+     * Get optional T by some attribute.
+     *
+     * @param attribute to filter.
+     * @param value     of attribute.
+     * @return the optional T
+     */
+    Optional<T> get(String attribute, Object value);
 
     /**
      * Get all the T.

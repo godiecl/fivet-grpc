@@ -29,6 +29,7 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
 import java.time.ZonedDateTime;
@@ -41,6 +42,7 @@ import java.util.Optional;
  * @param <T> to parametrize.
  * @author Diego Urrutia-Astorga.
  */
+@Slf4j
 public final class ORMLiteDAO<T extends BaseEntity> implements DAO<T> {
 
     /**
@@ -77,6 +79,23 @@ public final class ORMLiteDAO<T extends BaseEntity> implements DAO<T> {
 
         // Return the value
         return Optional.of(t);
+    }
+
+    /**
+     * Get optional T by some attribute.
+     *
+     * @param attribute to filter.
+     * @param value     of attribute.
+     * @return the optional T
+     */
+    @SneakyThrows
+    @Override
+    public Optional<T> get(String attribute, Object value) {
+        List<T> list = this.theDao.queryForEq(attribute, value);
+        if (list.size() > 1) {
+            log.warn("Founded more than one value in {} for {}", value, attribute);
+        }
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     /**
