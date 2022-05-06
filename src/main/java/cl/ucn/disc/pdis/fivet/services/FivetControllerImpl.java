@@ -31,8 +31,11 @@ import com.j256.ormlite.field.DataPersisterManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -46,6 +49,11 @@ public final class FivetControllerImpl implements FivetController {
      * The Dao.
      */
     private final DAO<Persona> thePersonaDAO;
+
+    /**
+     * The Hasher.
+     */
+    private final static PasswordEncoder PASSWORD_ENCODER = new Argon2PasswordEncoder();
 
     /**
      * The Constructor.
@@ -82,10 +90,51 @@ public final class FivetControllerImpl implements FivetController {
      */
     @Override
     public Optional<Persona> retrieveByLogin(String login) {
-        Optional<Persona> rutPersona = this.thePersonaDAO.get("rut", login);
-        if (rutPersona.isPresent()) {
-            return rutPersona;
+        Optional<Persona> oPersona = this.thePersonaDAO.get("rut", login);
+
+        if (oPersona.isPresent()) {
+            return oPersona;
         }
         return this.thePersonaDAO.get("email", login);
+    }
+
+    /**
+     * Retrieve a Persona from login + password.
+     *
+     * @param login    to use (rut or email).
+     * @param password to check.
+     * @return the Persona.
+     */
+    @Override
+    public Optional<Persona> authenticate(String login, String password) {
+        Optional<Persona> oPersona = this.retrieveByLogin(login);
+
+        // Empty -> get out of here!
+        if (oPersona.isEmpty()) {
+            log.warn("Persona with login <{}> not found.", login);
+            return Optional.empty();
+        }
+
+        // Wrong password -> get out of there!
+        if (PASSWORD_ENCODER.matches(oPersona.get().getPassword(), password)) {
+            return Optional.empty();
+        }
+
+        // All ok!
+        return oPersona;
+    }
+
+    /**
+     * Save a Persona into the backend.
+     *
+     * @param persona  to save.
+     * @param password to hash.
+     */
+    @Override
+    public void add(@NonNull Persona persona, @NonNull String password) {
+        // Hash password
+        persona.setPassword(PASSWORD_ENCODER.encode(password));
+        // Save the persona
+        this.thePersonaDAO.save(persona);
     }
 }

@@ -67,6 +67,10 @@ dependencies {
     implementation 'io.grpc:grpc-protobuf:1.46.0'
     implementation 'io.grpc:grpc-stub:1.46.0'
     compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
+
+    // Crypto library
+    implementation 'org.springframework.security:spring-security-crypto:5.6.3'
+
 }
 
 protobuf {

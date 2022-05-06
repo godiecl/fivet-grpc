@@ -29,6 +29,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * The Persona.
@@ -66,6 +67,7 @@ public final class Persona extends BaseEntity {
      * The password.
      */
     @Getter
+    @Setter
     @DatabaseField(canBeNull = false)
     private String password;
 

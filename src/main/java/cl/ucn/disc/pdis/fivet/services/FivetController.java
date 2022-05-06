@@ -35,9 +35,29 @@ import java.util.Optional;
 public interface FivetController {
 
     /**
+     * Retrieve a Persona from login.
+     *
      * @param login to use.
      * @return the Persona.
      */
     Optional<Persona> retrieveByLogin(String login);
+
+    /**
+     * Retrieve a Persona from login + password.
+     *
+     * @param login    to use (rut or email).
+     * @param password to check.
+     * @return the Persona.
+     */
+    Optional<Persona> authenticate(String login, String password);
+
+
+    /**
+     * Save a Persona into the backend.
+     *
+     * @param persona  to save.
+     * @param password to hash.
+     */
+    void add(Persona persona, String password);
 
 }
