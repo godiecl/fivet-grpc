@@ -86,16 +86,19 @@ public final class ORMLiteDAO<T extends BaseEntity> implements DAO<T> {
      *
      * @param attribute to filter.
      * @param value     of attribute.
-     * @return the optional T
+     * @return the optional T.
      */
     @SneakyThrows
     @Override
     public Optional<T> get(String attribute, Object value) {
-        List<T> list = this.theDao.queryForEq(attribute, value);
-        if (list.size() > 1) {
+        // Retrieve from database
+        List<T> filtered = this.removeDeleted(this.theDao.queryForEq(attribute, value));
+
+        // Show a warning
+        if (filtered.size() > 1) {
             log.warn("Founded more than one value in {} for {}", value, attribute);
         }
-        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+        return filtered.isEmpty() ? Optional.empty() : Optional.of(filtered.get(0));
     }
 
     /**
@@ -104,7 +107,7 @@ public final class ORMLiteDAO<T extends BaseEntity> implements DAO<T> {
     @SneakyThrows(SQLException.class)
     @Override
     public List<T> getAll() {
-        return this.theDao.queryForAll();
+        return this.removeDeleted(this.theDao.queryForAll());
     }
 
     /**
@@ -139,20 +142,40 @@ public final class ORMLiteDAO<T extends BaseEntity> implements DAO<T> {
     @SneakyThrows(SQLException.class)
     @Override
     public void delete(Integer id) {
-        // 1. Retrieve the object from database.
+        // Retrieve the object from database.
         Optional<T> theOptional = this.get(id);
 
-        // 2. If the object is null, throw exception
-        if (theOptional.isEmpty()) {
-            throw new SQLException("Can't delete object with id = " + id + ", Not found!");
-        }
-        T theEntity = theOptional.get();
+        // If present..
+        theOptional.ifPresent(theEntity -> {
+            // Set the date
+            theEntity.setDeletedAt(ZonedDateTime.now());
+            // Update the entity
+            this.update(theEntity);
+        });
+    }
 
-        // 3. Mark as deleted
-        theEntity.setDeletedAt(ZonedDateTime.now());
+    /**
+     * Update the T.
+     *
+     * @param t to update.
+     */
+    @SneakyThrows(SQLException.class)
+    @Override
+    public void update(T t) {
+        this.theDao.update(t);
+    }
 
-        // 4. Update the entity
-        this.theDao.update(theEntity);
+    /**
+     * Remove the deleted T
+     *
+     * @param theList to filter.
+     * @return the List filtered.
+     */
+    private List<T> removeDeleted(List<T> theList) {
+        // Remove the deleteds
+        return theList.stream()
+                .filter(t -> t.getDeletedAt() == null)
+                .toList();
     }
 
 }

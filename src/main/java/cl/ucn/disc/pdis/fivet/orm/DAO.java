@@ -79,4 +79,10 @@ public interface DAO<T extends BaseEntity> {
      */
     void delete(Integer id);
 
+    /**
+     * Update the T.
+     *
+     * @param t to update.
+     */
+    void update(T t);
 }
