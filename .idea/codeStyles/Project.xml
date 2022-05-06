@@ -2,6 +2,9 @@
   <code_scheme name="Project" version="173">
     <option name="ENABLE_SECOND_REFORMAT" value="true" />
     <option name="SOFT_MARGINS" value="80,100" />
+    <JavaCodeStyleSettings>
+      <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="10" />
+    </JavaCodeStyleSettings>
     <codeStyleSettings language="JAVA">
       <option name="WRAP_COMMENTS" value="true" />
     </codeStyleSettings>
