@@ -53,11 +53,18 @@ public interface FivetController {
 
 
     /**
-     * Save a Persona into the backend.
+     * Save a Persona into the Backend.
      *
      * @param persona  to save.
      * @param password to hash.
      */
     void add(Persona persona, String password);
+
+    /**
+     * Delete a Persona from the Backend.
+     *
+     * @param idPersona to delete.
+     */
+    void delete(Integer idPersona);
 
 }

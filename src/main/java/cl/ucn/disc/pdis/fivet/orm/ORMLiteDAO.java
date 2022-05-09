@@ -139,7 +139,6 @@ public final class ORMLiteDAO<T extends BaseEntity> implements DAO<T> {
      *
      * @param id to delete.
      */
-    @SneakyThrows(SQLException.class)
     @Override
     public void delete(Integer id) {
         // Retrieve the object from database.

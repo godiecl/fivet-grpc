@@ -25,6 +25,9 @@ package cl.ucn.disc.pdis.fivet;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * The Main.
@@ -41,10 +44,23 @@ public final class Main {
      */
     @SneakyThrows(Exception.class)
     public static void main(String[] args) {
-        log.debug("Starting Main ..");
+        log.debug("Starting Main ..{}", 1 << 12);
+
+        String thePassword = "This is my password";
+
+        StopWatch sw = StopWatch.createStarted();
+        {
+            // String hash = BCrypt.hashpw(thePassword, BCrypt.gensalt(13));
+            // log.debug("Hash: {}", hash);
+
+            PasswordEncoder pe = new Argon2PasswordEncoder();
+            String hash = pe.encode(thePassword);
+            log.debug("Hash: {}", hash);
+        }
+
+        log.debug("Time: {}", sw.formatTime());
 
         log.debug("Done.");
     }
-
 
 }

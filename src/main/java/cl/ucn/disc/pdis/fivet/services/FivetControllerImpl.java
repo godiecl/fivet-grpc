@@ -137,4 +137,14 @@ public final class FivetControllerImpl implements FivetController {
         // Save the persona
         this.thePersonaDAO.save(persona);
     }
+
+    /**
+     * Delete a Persona from the Backend.
+     *
+     * @param idPersona to delete.
+     */
+    @Override
+    public void delete(Integer idPersona) {
+        this.thePersonaDAO.delete(idPersona);
+    }
 }
