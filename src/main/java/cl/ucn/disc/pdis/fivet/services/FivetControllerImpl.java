@@ -116,7 +116,8 @@ public final class FivetControllerImpl implements FivetController {
         }
 
         // Wrong password -> get out of there!
-        if (PASSWORD_ENCODER.matches(oPersona.get().getPassword(), password)) {
+        if (!PASSWORD_ENCODER.matches(password, oPersona.get().getPassword())) {
+            log.warn("Persona with login={} use a wrong password", login);
             return Optional.empty();
         }
 
