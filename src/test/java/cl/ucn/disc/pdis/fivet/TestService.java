@@ -63,11 +63,26 @@ public final class TestService {
             controller.add(persona, "durrutia123");
         }
 
-        // Retrieve
+        // Authenticate
+        {
+            controller.authenticate("durrutia@ucn.cl", "durrutia123").orElseThrow();
+            controller.authenticate("130144918", "durrutia123").orElseThrow();
+        }
+
+        // Retrieve by email
         {
             log.debug("Retrieving ..");
             Persona persona = controller.retrieveByLogin("durrutia@ucn.cl").orElseThrow();
-            log.debug("Persona: {}", ToStringBuilder.reflectionToString(persona, ToStringStyle.JSON_STYLE));
+            log.debug("Persona: {}", ToStringBuilder.reflectionToString(persona,
+                    ToStringStyle.JSON_STYLE));
+        }
+
+        // Retrieve by rut
+        {
+            log.debug("Retrieving ..");
+            Persona persona = controller.retrieveByLogin("130144918").orElseThrow();
+            log.debug("Persona: {}", ToStringBuilder.reflectionToString(persona,
+                    ToStringStyle.JSON_STYLE));
         }
 
         // Delete
